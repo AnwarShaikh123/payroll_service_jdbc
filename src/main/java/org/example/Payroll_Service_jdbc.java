@@ -8,19 +8,24 @@ public class Payroll_Service_jdbc {
         String username="root";
         String password="Anwarshaikh@8652741234";
         Connection connection=null;
-        Statement statement=null;
+        PreparedStatement updateStatement = null;
+        PreparedStatement selectStatement = null;
+
         ResultSet rs= null;
         try{
             connection=DriverManager.getConnection(url,username,password);
             System.out.println("Connection Successfull");
-            String queryUpadated="UPDATE employee_payroll SET Basic_pay=3000000.00 WHERE name ='Raj' ";
-            statement=connection.createStatement();
-            int rowAffected=statement.executeUpdate(queryUpadated);
-            System.out.println("ROW AFFECTED "+rowAffected);
+            String queryUpdate = "UPDATE employee_payroll SET Basic_pay = ? WHERE name = ?";
+            updateStatement = connection.prepareStatement(queryUpdate);
+            updateStatement.setDouble(1, 300000); // Use setDouble for double values
+            updateStatement.setString(2, "Laksh");
+            int rowsAffected = updateStatement.executeUpdate();
+            System.out.println("Rows Affected: " + rowsAffected);
 
             String query= " SELECT * FROM employee_payroll";
-            
-            rs=statement.executeQuery(query);
+
+            selectStatement = connection.prepareStatement(query);
+            rs = selectStatement.executeQuery();
             while (rs.next()){
                 System.out.println("Empolyee ID: " + rs.getInt(1));
                 System.out.println("Employee Name: " + rs.getString(2));
@@ -45,7 +50,8 @@ public class Payroll_Service_jdbc {
         finally{
             try {
                 if (rs != null) rs.close();
-                if (statement != null) statement.close();
+                if (updateStatement != null) updateStatement.close();
+                if (selectStatement != null) selectStatement.close();
                 if (connection != null) connection.close();
             } catch (SQLException e) {
                 System.out.println("Error closing resources: " + e.getMessage());
