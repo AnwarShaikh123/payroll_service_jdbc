@@ -6,7 +6,7 @@ public class Payroll_Service_jdbc {
     public static void main(String[] args) {
         String url = "jdbc:mysql://localhost:3306/payroll_service";
         String username = "root";
-        String password = "********";
+        String password = "Anwarshaikh@8652741234";
 
         Connection connection = null;
         PreparedStatement statement = null;
@@ -14,28 +14,17 @@ public class Payroll_Service_jdbc {
         try {
             connection = DriverManager.getConnection(url, username, password);
             System.out.println("Connection Successful");
-            String query = "SELECT * FROM employee_payroll WHERE start BETWEEN ? AND DATE(NOW())";
+            String query = "SELECT SUM(salary) AS total_salary FROM employee_payroll WHERE gender='m' GROUP BY gender";
             statement = connection.prepareStatement(query);
-            statement.setDate(1, Date.valueOf("2016-11-23"));
+
             rs = statement.executeQuery();
+
             if (!rs.isBeforeFirst()) {
-                System.out.println("No records found for the specified date range.");
+                System.out.println("No records found for male employees.");
             } else {
                 while (rs.next()) {
-                    System.out.println("Employee ID: " + rs.getInt("id"));
-                    System.out.println("Employee Name: " + rs.getString("name"));
-                    System.out.println("Employee Gender: " + rs.getString("gender"));
-                    System.out.println("Employee Salary: " + rs.getDouble("salary"));
-                    System.out.println("Start Date: " + rs.getDate("start"));
-                    System.out.println("Employee Phone Number: " + rs.getString("phone_no")); // Using "phone_no" here
-                    System.out.println("Address: " + rs.getString("address"));
-                    System.out.println("Department: " + rs.getString("department"));
-                    System.out.println("Basic Pay: " + rs.getDouble("basic_pay"));
-                    System.out.println("Deductions: " + rs.getDouble("deductions"));
-                    System.out.println("Taxable Pay: " + rs.getDouble("taxable_pay"));
-                    System.out.println("Income Tax: " + rs.getDouble("income_tax"));
-                    System.out.println("Net Pay: " + rs.getDouble("net_pay"));
-                    System.out.println();
+                    double totalSalary = rs.getDouble("total_salary");
+                    System.out.println("Total Salary for Male Employees: " + totalSalary);
                 }
                 System.out.println("Read successful");
             }
