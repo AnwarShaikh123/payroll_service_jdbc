@@ -6,15 +6,20 @@ public class Payroll_Service_jdbc {
     public static void main(String[] args) {
         String url="jdbc:mysql://localhost:3306/payroll_service";
         String username="root";
-        String password="******";
+        String password="Anwarshaikh@8652741234";
         Connection connection=null;
         Statement statement=null;
         ResultSet rs= null;
         try{
             connection=DriverManager.getConnection(url,username,password);
             System.out.println("Connection Successfull");
-            String query= " SELECT * FROM employee_payroll";
+            String queryUpadated="UPDATE employee_payroll SET Basic_pay=3000000.00 WHERE name ='Raj' ";
             statement=connection.createStatement();
+            int rowAffected=statement.executeUpdate(queryUpadated);
+            System.out.println("ROW AFFECTED "+rowAffected);
+
+            String query= " SELECT * FROM employee_payroll";
+            
             rs=statement.executeQuery(query);
             while (rs.next()){
                 System.out.println("Empolyee ID: " + rs.getInt(1));
